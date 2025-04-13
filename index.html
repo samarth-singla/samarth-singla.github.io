@@ -652,6 +652,7 @@
             <a href="#skills">Skills</a>
             <a href="#education">Experience</a>
             <a href="#contact">Contact</a>
+            <a href="text-analyzer.html" target="_blank">Text Analyzer</a>
             <button class="theme-toggle" aria-label="Toggle Theme">🌓</button>
         </div>
     </nav>
@@ -672,11 +673,10 @@
                     <span class="typing-text"></span>
                 </div>
                 <div class="about-summary">
-                    <p>I'm a passionate web developer and UI/UX designer based in California. With a keen eye for detail and creative problem-solving skills, I specialize in creating visually stunning and highly functional websites.</p>
-                    <p>My expertise spans front-end development, responsive design, and user experience optimization. I'm committed to delivering high-quality digital solutions that not only look great but also provide an exceptional user experience.</p>
+                    <p>I am currently pursuing my B.Tech in CSE from IIIT Hyderabad. I am passionate about learning new things. As a passionate tech enthusiast, I love exploring new technoligies and their applications. Besides studies and tech, I'm also indulged into sports like volleyball, cricket, pool and football. These sports are a good way to achieve fitness as well as provide entertainment and joy.</p>
                 </div>
                 <!-- CV Download Link -->
-                <a href="assets/Samarth_Singla_CV.pdf" download class="cv-download">
+                <a href="resources\mera_cv.pdf" target="_blank" download class="cv-download">
                     <i class="fas fa-file-download"></i> Download CV
                 </a>
             </div>
@@ -929,6 +929,9 @@
                 </form>
                 
                 <div class="social-links">
+                    <a href="https://github.com/samarth-singla" class="social-link" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github"></i>
+                      </a>
                     <a href="https://www.facebook.com/profile.php?id=61550314655907" class="social-link"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/_samarth_singla_/" class="social-link"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.linkedin.com/in/samarth-singla-a39b54281/" class="social-link"><i class="fab fa-linkedin-in"></i></a>
@@ -949,7 +952,7 @@
         });
 
         // Typing Animation
-        const phrases = ['Web Developer', 'UI/UX Designer', 'Creative Coder'];
+        const phrases = ['Web Developer', 'AI tools Expert', 'Creative Coder'];
         const typingText = document.querySelector('.typing-text');
         let phraseIndex = 0;
         let currentPhrase = [];
@@ -1017,6 +1020,130 @@
             alert('Thank you for your message! I will get back to you soon.');
             this.reset();
         });
+    </script>
+
+    <!-- Script for Q2 -->
+    <script>
+    // Event tracking function for github.io page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Track page views
+        const trackPageView = function(element) {
+            // Check if element is visible in viewport
+            const isInViewport = function(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            };
+    
+            // Create observer for tracking when elements enter viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Get element type
+                        let elementType = "unknown";
+                        const target = entry.target;
+                        
+                        if (target.tagName === 'IMG') {
+                            elementType = "image";
+                        } else if (target.tagName === 'P') {
+                            elementType = "text";
+                        } else if (target.tagName === 'A') {
+                            elementType = "link";
+                        } else if (target.tagName === 'BUTTON') {
+                            elementType = "button";
+                        } else if (target.tagName === 'SELECT') {
+                            elementType = "drop-down";
+                        } else if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+                            elementType = "form field";
+                        } else if (target.tagName === 'DIV' && target.className.includes('hometown-item')) {
+                            elementType = "hometown image";
+                        } else if (target.tagName === 'DIV' && target.className.includes('skill-ring')) {
+                            elementType = "skill chart";
+                        } else if (target.tagName === 'DIV' && target.className.includes('timeline-item')) {
+                            elementType = "education item";
+                        }
+                        
+                        // Log view event
+                        console.log(`${new Date().toISOString()}, view, ${elementType}`);
+                        
+                        // Stop observing after first view
+                        observer.unobserve(target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            // Start observing the element
+            observer.observe(element);
+        };
+    
+        // Track clicks on all elements
+        document.addEventListener('click', function(event) {
+            let elementType = "unknown";
+            const target = event.target;
+            
+            // Determine element type
+            if (target.tagName === 'IMG') {
+                elementType = "image";
+            } else if (target.tagName === 'P') {
+                elementType = "text";
+            } else if (target.tagName === 'A') {
+                elementType = "link";
+                // Check if this is the CV download link
+                if (target.href && target.href.endsWith('Samarth_Singla_CV.pdf')) {
+                    elementType = "CV download";
+                }
+            } else if (target.tagName === 'BUTTON') {
+                elementType = "button";
+                // Check if this is the theme toggle
+                if (target.className.includes('theme-toggle')) {
+                    elementType = "theme toggle";
+                }
+            } else if (target.tagName === 'SELECT') {
+                elementType = "drop-down";
+            } else if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+                elementType = "form field";
+            } else if (target.closest('.hometown-item')) {
+                elementType = "hometown image";
+            } else if (target.closest('.skill-ring')) {
+                elementType = "skill chart";
+            } else if (target.closest('.timeline-item')) {
+                elementType = "education item";
+            } else if (target.closest('.navbar-links')) {
+                elementType = "navigation link";
+            } else if (target.closest('.social-link')) {
+                elementType = "social media link";
+            }
+            
+            // Log click event
+            console.log(`${new Date().toISOString()}, click, ${elementType}`);
+        });
+    
+        // Track all relevant elements for page views
+        // About paragraph
+        document.querySelectorAll('.about-summary p').forEach(trackPageView);
+        
+        // Profile picture
+        trackPageView(document.querySelector('.profile-image'));
+        
+        // Hometown pictures
+        document.querySelectorAll('.hometown-item').forEach(trackPageView);
+        
+        // Education items
+        document.querySelectorAll('.timeline-item').forEach(trackPageView);
+        
+        // Skills items
+        document.querySelectorAll('.skill-ring').forEach(trackPageView);
+        
+        // CV link
+        trackPageView(document.querySelector('.cv-download'));
+        
+        // Log initial page load
+        console.log(`${new Date().toISOString()}, view, page load`);
+    });
     </script>
 </body>
 </html>

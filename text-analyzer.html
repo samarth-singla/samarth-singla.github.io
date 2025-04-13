@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Analyzer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .result-box {
+            flex: 1;
+            min-width: 250px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.2em;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .count-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .count-item span:first-child {
+            font-weight: bold;
+        }
+        .count-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Analyzer</h1>
+    <div class="container">
+        <textarea id="textInput" placeholder="Enter or paste text with more than 10000 words here..."></textarea>
+        <button onclick="analyzeText()">Analyze Text</button>
+        
+        <div class="results">
+            <div class="result-box">
+                <h2>Basic Text Statistics</h2>
+                <div id="basicStats"></div>
+            </div>
+            
+            <div class="result-box">
+                <h2>Pronouns Count</h2>
+                <div id="pronounsCount" class="count-list"></div>
+            </div>
+            
+            <div class="result-box">
+                <h2>Prepositions Count</h2>
+                <div id="prepositionsCount" class="count-list"></div>
+            </div>
+            
+            <div class="result-box">
+                <h2>Indefinite Articles Count</h2>
+                <div id="articlesCount" class="count-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyzeText() {
+            const text = document.getElementById('textInput').value;
+            
+            if (!text) {
+                alert('Please enter some text to analyze');
+                return;
+            }
+            
+            // Calculate basic text statistics
+            calculateBasicStats(text);
+            
+            // Tokenize and process text
+            const tokens = tokenizeText(text);
+            
+            // Count and display pronouns
+            countParts(tokens, 'pronouns');
+            
+            // Count and display prepositions
+            countParts(tokens, 'prepositions');
+            
+            // Count and display indefinite articles
+            countParts(tokens, 'articles');
+        }
+        
+        function calculateBasicStats(text) {
+            // Count letters
+            const letters = (text.match(/[a-zA-Z]/g) || []).length;
+            
+            // Count words
+            const words = text.split(/\s+/).filter(word => word.length > 0).length;
+            
+            // Count spaces
+            const spaces = (text.match(/\s/g) || []).length;
+            
+            // Count newlines
+            const newlines = (text.match(/\n/g) || []).length;
+            
+            // Count special symbols (non-alphanumeric, non-whitespace)
+            const specialSymbols = (text.match(/[^\w\s]/g) || []).length;
+            
+            const statsHTML = `
+                <div class="count-item"><span>Letters:</span> <span>${letters}</span></div>
+                <div class="count-item"><span>Words:</span> <span>${words}</span></div>
+                <div class="count-item"><span>Spaces:</span> <span>${spaces}</span></div>
+                <div class="count-item"><span>Newlines:</span> <span>${newlines}</span></div>
+                <div class="count-item"><span>Special Symbols:</span> <span>${specialSymbols}</span></div>
+            `;
+            
+            document.getElementById('basicStats').innerHTML = statsHTML;
+        }
+        
+        function tokenizeText(text) {
+            // Convert to lowercase and remove punctuation
+            const cleanText = text.toLowerCase().replace(/[^\w\s]|_/g, '');
+            
+            // Split by whitespace to get tokens
+            return cleanText.split(/\s+/).filter(token => token.length > 0);
+        }
+        
+        function countParts(tokens, type) {
+            let items;
+            let elementId;
+            
+            if (type === 'pronouns') {
+                items = [
+                    'i', 'me', 'my', 'mine', 'myself',
+                    'you', 'your', 'yours', 'yourself', 'yourselves',
+                    'he', 'him', 'his', 'himself',
+                    'she', 'her', 'hers', 'herself',
+                    'it', 'its', 'itself',
+                    'we', 'us', 'our', 'ours', 'ourselves',
+                    'they', 'them', 'their', 'theirs', 'themselves',
+                    'who', 'whom', 'whose', 'which', 'what',
+                    'this', 'that', 'these', 'those',
+                    'somebody', 'someone', 'something',
+                    'anybody', 'anyone', 'anything',
+                    'everybody', 'everyone', 'everything',
+                    'nobody', 'no one', 'nothing'
+                ];
+                elementId = 'pronounsCount';
+            } else if (type === 'prepositions') {
+                items = [
+                    'about', 'above', 'across', 'after', 'against', 'along', 'amid', 'among',
+                    'around', 'at', 'before', 'behind', 'below', 'beneath', 'beside', 'between',
+                    'beyond', 'by', 'concerning', 'considering', 'despite', 'down', 'during',
+                    'except', 'for', 'from', 'in', 'inside', 'into', 'like', 'near', 'of', 'off',
+                    'on', 'onto', 'out', 'outside', 'over', 'past', 'regarding', 'round', 'since',
+                    'through', 'throughout', 'to', 'toward', 'towards', 'under', 'underneath',
+                    'until', 'unto', 'up', 'upon', 'with', 'within', 'without'
+                ];
+                elementId = 'prepositionsCount';
+            } else if (type === 'articles') {
+                items = ['a', 'an'];  // Only indefinite articles as specified
+                elementId = 'articlesCount';
+            }
+            
+            // Create object to store counts
+            const counts = {};
+            items.forEach(item => counts[item] = 0);
+            
+            // Count occurrences
+            tokens.forEach(token => {
+                if (items.includes(token)) {
+                    counts[token]++;
+                }
+            });
+            
+            // Sort by count in descending order and filter out zero counts
+            const sortedCounts = Object.entries(counts)
+                .filter(([_, count]) => count > 0)
+                .sort((a, b) => b[1] - a[1]);
+            
+            // Generate HTML for display
+            let html = '';
+            if (sortedCounts.length === 0) {
+                html = '<div class="count-item"><span>No items found</span></div>';
+            } else {
+                sortedCounts.forEach(([item, count]) => {
+                    html += `<div class="count-item"><span>${item}:</span> <span>${count}</span></div>`;
+                });
+            }
+            
+            document.getElementById(elementId).innerHTML = html;
+        }
+    </script>
+</body>
+</html>
