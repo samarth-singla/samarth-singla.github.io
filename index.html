@@ -35,15 +35,16 @@
             color: var(--text-primary);
             background-color: var(--bg-primary);
             overflow-x: hidden;
+            padding-top: 60px; /* Added padding for fixed navbar */
         }
 
-        /* Navigation Styles */
+        /* Navigation Styles - Modified */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem 5%;
-            background-color: rgba(255,255,255,0.05);
+            background-color: rgba(17, 17, 17, 0.9); /* More solid background for better visibility */
             position: fixed;
             width: 100%;
             top: 0;
@@ -78,6 +79,28 @@
             color: var(--text-primary);
             cursor: pointer;
             font-size: 1.2rem;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .close-menu-btn {
+            display: none;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         /* Section Ribbon Styles */
@@ -128,6 +151,7 @@
             justify-content: center;
             padding: 0 5%;
             background-color: var(--bg-primary);
+            margin-top: 0; /* Adjust for fixed navbar */
         }
 
         .home-container {
@@ -574,8 +598,37 @@
                 font-size: 3rem;
             }
 
+            /* Mobile Menu Styles */
+            .navbar {
+                padding: 1rem;
+            }
+            
             .navbar-links {
-                display: none;
+                position: fixed;
+                flex-direction: column;
+                align-items: flex-start;
+                background-color: var(--bg-primary);
+                top: 0;
+                right: -250px; /* Hidden by default */
+                width: 250px;
+                height: 100vh;
+                padding: 2rem 1rem;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+                z-index: 1001;
+            }
+            
+            .navbar-links.active {
+                right: 0; /* Show when active */
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                z-index: 1001;
+            }
+            
+            .close-menu-btn {
+                display: block;
             }
 
             /* Timeline Responsive Adjustments */
@@ -643,10 +696,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body data-theme="dark">
-    <!-- Navigation -->
+    <!-- Modified Navigation -->
     <nav class="navbar">
         <div class="logo">SAMARTH SINGLA</div>
+        <button class="mobile-menu-btn" aria-label="Open Menu">
+            <i class="fas fa-bars"></i>
+        </button>
         <div class="navbar-links">
+            <button class="close-menu-btn" aria-label="Close Menu">
+                <i class="fas fa-times"></i>
+            </button>
             <a href="#home">Home</a>
             <a href="#hometown">Hometown</a>
             <a href="#skills">Skills</a>
@@ -932,9 +991,9 @@
                     <a href="https://github.com/samarth-singla" class="social-link" target="_blank" rel="noopener noreferrer">
                         <i class="fab fa-github"></i>
                       </a>
-                    <a href="https://www.facebook.com/profile.php?id=61550314655907" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/_samarth_singla_/" class="social-link"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/in/samarth-singla-a39b54281/" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61550314655907" target="_blank" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/_samarth_singla_/" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/samarth-singla-a39b54281/" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
         </div>
@@ -1020,6 +1079,30 @@
             alert('Thank you for your message! I will get back to you soon.');
             this.reset();
         });
+    </script>
+
+    <script>
+        // Mobile Menu Functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const closeMenuBtn = document.querySelector('.close-menu-btn');
+        const navbarLinks = document.querySelector('.navbar-links');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navbarLinks.classList.add('active');
+        });
+        
+        closeMenuBtn.addEventListener('click', () => {
+            navbarLinks.classList.remove('active');
+        });
+        
+        // Close menu when clicking on links
+        document.querySelectorAll('.navbar-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navbarLinks.classList.remove('active');
+            });
+        });
+
+        // Your existing JavaScript code remains the same
     </script>
 
     <!-- Script for Q2 -->
